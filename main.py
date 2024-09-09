@@ -8,21 +8,22 @@ def index():
     return {"h1": "Hello world!"}
 
 
-@app.get("/{name}+{name2}/")
-def say_hello(name: int, name2: int):
-    return {name + name2}
+users = ["Admin", "User1", "User2"]
 
+@app.get("/read_users/")
+def read_all_users():
+    return {"all users": users}
 
-@app.get("/{name}-{name2}/")
-def say_hello(name: int, name2: int):
-    return {name - name2}
+@app.post("/add_user/{name}", status_code=200)
+def add_users(name):
+    if name in users:
+        return {"message": f"Name {name} is exists "}
+    users.append(name)
+    return {"name": name}
 
-
-@app.get("/{name}*{name2}/")
-def say_hello(name: int, name2: int):
-    return {name * name2}
-
-
-@app.get("/{name}/{name2}/")
-def say_hello(name: int, name2: int):
-    return {name / name2}
+@app.delete("/delete_user/{name}", status_code=200)
+def delete_users(name):
+    if name not in users:
+        return {"message": f"Name {name} is not found "}
+    users.remove(name)
+    return {"name": name}
